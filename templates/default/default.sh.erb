@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ps xafu | grep "<%= @pattern %>.pem" >/dev/null 2>&1 && exit 0
+
+while [ 1 ]; do
+ if [ ! -f /etc/ssh_tunnel/<%= @pattern %>.pem ]; then exit 0; fi
+
+ ps xafu | grep "<%= @pattern %>.pem" >/dev/null 2>&1 ||\
+ /usr/bin/ssh -q -f -N -i /etc/ssh_tunnel/<%= @pattern %>.pem -L <%= @pattern %> -p <%= @gw_port %> <%= @gw_user %>@<%= @gw_addr %>
+
+ sleep 3
+done
